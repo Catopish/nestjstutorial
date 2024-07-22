@@ -1,18 +1,18 @@
 import {
-  // Body,
+  Body,
   Controller,
+  Delete,
   Get,
   Param,
-  // Delete,
-  // Patch,
-  // Post,
+  Patch,
+  Post,
   // Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './task.entity';
-// import { createTaskDto } from './dto/create-task.dto';
+import { createTaskDto } from './dto/create-task.dto';
 // import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
-// import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -20,6 +20,22 @@ export class TasksController {
   @Get('/:id')
   getTaskById(@Param('id') id: string): Promise<Task> {
     return this.taskService.getTaskById(id);
+  }
+  @Post()
+  createTask(@Body() createTaskDTO: createTaskDto): Promise<Task> {
+    return this.taskService.createTask(createTaskDTO);
+  }
+  @Delete('/:id')
+  delTaskById(@Param('id') id: string): Promise<void> {
+    return this.taskService.delTaskById(id);
+  }
+  @Patch('/:id/status')
+  patchTaskById(
+    @Param('id') id: string,
+    @Body() updateTaskStatusDTO: UpdateTaskStatusDto,
+  ): Promise<Task> {
+    const { status } = updateTaskStatusDTO;
+    return this.taskService.patchTaskByid(id, status);
   }
   // @Get()
   // getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
@@ -29,22 +45,6 @@ export class TasksController {
   //     return this.taskService.getAllTasks();
   //   }
   // }
-  // @Delete('/:id')
-  // delTaskById(@Param('id') id: string): void {
-  //   return this.taskService.delTaskById(id);
-  // }
   //
-  // @Patch('/:id/status')
-  // patchTaskById(
-  //   @Param('id') id: string,
-  //   @Body() updateTaskStatusDTO: UpdateTaskStatusDto,
-  // ) {
-  //   const { status } = updateTaskStatusDTO;
-  //   return this.taskService.patchTaskByid(id, status);
-  // }
   //
-  // @Post()
-  // createTask(@Body() createTaskDTO: createTaskDto): Task {
-  //   return this.taskService.createTask(createTaskDTO);
-  // }
 }
