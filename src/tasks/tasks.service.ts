@@ -5,19 +5,21 @@ import { createTaskDto } from './dto/create-task.dto';
 import { TasksRepository } from './task.repository';
 import { Task } from './task.entity';
 import { TaskStatus } from './task-status.enum';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
 @Injectable()
 export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
-  // getAllTasks(): Task[] {
-  //   return this.tasks;
-  // }
   async getTaskById(id: string): Promise<Task> {
     const found = await this.tasksRepository.findOneBy({ id });
     if (!found) {
       throw new NotFoundException(`Task with ${id} not found`);
     }
     return found;
+  }
+
+  async getTasks(filterDTO: GetTasksFilterDto): Promise<Task[]> {
+    return this.tasksRepository.getTasks(filterDTO);
   }
 
   createTask(createTaskDTO: createTaskDto): Promise<Task> {
@@ -36,24 +38,4 @@ export class TasksService {
     await this.tasksRepository.save(obj);
     return obj;
   }
-  // getTaskByFilter(filterDto: GetTasksFilterDto): Task[] {
-  //   const { status, search } = filterDto;
-  //   let tasks = this.getAllTasks();
-  //   if (status) {
-  //     tasks = tasks.filter((task) => task.status === status);
-  //   }
-  //   if (search) {
-  //     tasks = tasks.filter((task) => {
-  //       if (task.title.includes(search) || task.description.includes(search)) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     });
-  //   }
-  //   return tasks;
-  // }
-  //
-  //
-  //
 }
