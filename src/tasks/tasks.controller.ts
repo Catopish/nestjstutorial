@@ -17,12 +17,14 @@ import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { user } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
   constructor(private taskService: TasksService) {}
   @Get()
+  @ApiBearerAuth()
   getTasks(
     @Query() filterDto: GetTasksFilterDto,
     @GetUser() user: user,
